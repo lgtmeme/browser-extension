@@ -15,7 +15,7 @@
     "types:install": "flow-typed install",
     "types:update": "flow-typed update",
     "test:flow": "flow",
-    "test:lint": "eslint 'src/**/*.js' --cache --max-warnings=0 --format junit -o reports/junit/eslint/js-lint-results.xml",
+    "test:lint": "eslint 'src/**/*.js' --cache --max-warnings=0",
     "test:jest": "JEST_JUNIT_OUTPUT=reports/junit/jest/js-jest-results.xml jest",
     "test": "yarn test:flow && yarn test:lint && yarn test:jest"
   },
@@ -71,6 +71,7 @@
     "flow-watch": "^1.1.3",
     "flowtype-loader": "^0.2.2",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^0.14.3",
     "jest": "^23.1.0",
     "jest-junit": "^5.0.0",
     "lint-staged": "^7.1.3",
