@@ -6,6 +6,7 @@ import {
   getMemeRepoFor,
   doesRepoExist,
   getFileContents,
+  setFileContents,
 } from './github-fs';
 
 // eslint-disable-next-line no-console
@@ -18,16 +19,29 @@ console.log('current', currentRepo);
 if (currentRepo) {
   const memeRepo = getMemeRepoFor(currentRepo);
   // eslint-disable-next-line no-console
-  console.log('memeRepo', memeRepo);
+  console.log('memeRepo is', memeRepo);
 
-  doesRepoExist(memeRepo).then(exists => {
+  const testRepo = {owner: 'lgtmeme', name: 'test'};
+  // eslint-disable-next-line no-console
+  console.log('testRepo', testRepo);
+
+  doesRepoExist(testRepo).then(exists => {
     // eslint-disable-next-line no-console
-    console.log('meme repo exists?', exists);
+    console.log('test repo exists?', exists);
 
     if (exists) {
-      getFileContents(memeRepo, 'macros.json').then(contents => {
+      getFileContents(testRepo, 'test.json').then(contents => {
         // eslint-disable-next-line no-console
         console.log('got some contents', contents);
+
+        setFileContents(
+          testRepo,
+          'test.json',
+          old => `${old}\nsomething new ${old.split('\n').length.toString()}`,
+        ).then(() => {
+          // eslint-disable-next-line no-console
+          console.log('saved');
+        });
       });
     }
   });

@@ -1,6 +1,8 @@
 // @flow
 // @format
 
+import nullthrows from 'nullthrows';
+
 import {getXPathNodes} from '../util/domUtil';
 
 import type {Repo} from './types';
@@ -14,10 +16,15 @@ export function getFileUrl(repo: Repo, filepath: string): string {
 
 export class NotFoundError extends Error {}
 
-export async function getFileContents(
+export type GetFileResult = {
+  editAuthenticityToken: string,
+  contents: string,
+};
+
+export async function getFile(
   repo: Repo,
   filepath: string,
-): Promise<string> {
+): Promise<GetFileResult> {
   const res = await fetch(getFileUrl(repo, filepath), {
     headers: {
       'X-PJAX': 'true',
@@ -35,10 +42,32 @@ export async function getFileContents(
   const text = await res.text();
   const container = document.createElement('div');
   container.innerHTML = text;
+
   const codeLineEls = getXPathNodes(
     container,
     "//td[contains(@class, 'blob-code')]",
   );
   const lines = codeLineEls.map(el => el.innerText);
-  return lines.join('\n');
+  const contents = lines.join('\n');
+
+  const authTokenEls = getXPathNodes(
+    container,
+    "//form[contains(@class, 'js-update-url-with-hash')]/input[@name='authenticity_token']",
+  );
+  const editAuthenticityToken = nullthrows(
+    authTokenEls[0].getAttribute('value'),
+  );
+
+  return {
+    contents,
+    editAuthenticityToken,
+  };
+}
+
+export async function getFileContents(
+  repo: Repo,
+  filepath: string,
+): Promise<string> {
+  const getFileResults = await getFile(repo, filepath);
+  return getFileResults.contents;
 }
