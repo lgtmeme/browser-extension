@@ -7,7 +7,7 @@ import {
   doesRepoExist,
   getFileContents,
   setFileContents,
-} from './github-fs';
+} from './githubFs';
 
 // eslint-disable-next-line no-console
 console.log("I'm an inline script");
