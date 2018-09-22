@@ -1,7 +1,12 @@
 // @flow
 // @format
 
-import {getCurrentRepo, getMemeRepoFor, doesRepoExist} from './github-fs';
+import {
+  getCurrentRepo,
+  getMemeRepoFor,
+  doesRepoExist,
+  getFileContents,
+} from './github-fs';
 
 // eslint-disable-next-line no-console
 console.log("I'm an inline script");
@@ -15,8 +20,15 @@ if (currentRepo) {
   // eslint-disable-next-line no-console
   console.log('memeRepo', memeRepo);
 
-  doesRepoExist(memeRepo).then(exists =>
+  doesRepoExist(memeRepo).then(exists => {
     // eslint-disable-next-line no-console
-    console.log('meme repo exists?', exists),
-  );
+    console.log('meme repo exists?', exists);
+
+    if (exists) {
+      getFileContents(memeRepo, 'macros.json').then(contents => {
+        // eslint-disable-next-line no-console
+        console.log('got some contents', contents);
+      });
+    }
+  });
 }
