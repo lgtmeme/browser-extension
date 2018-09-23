@@ -79,11 +79,23 @@ export type ReadVersion = {
   major: number,
 };
 
+function isVersionNum(num: number): boolean {
+  return Number.isInteger(num) && num >= 0;
+}
+
 function ensureVersionNum(num: number): void {
-  invariant(
-    Number.isInteger(num) && num >= 0,
-    `Version num (${num}) is invalid`,
-  );
+  invariant(isVersionNum(num), `Version num (${num}) is invalid`);
+}
+
+export function version(major: number, minor: number, patch: number): Version {
+  ensureVersionNum(major);
+  ensureVersionNum(minor);
+  ensureVersionNum(patch);
+  return {
+    major,
+    minor,
+    patch,
+  };
 }
 
 export function toReadVersion(
@@ -124,6 +136,41 @@ export function versionStr(ver: Version | ReadVersion | WriteVersion): string {
   return parts.join('.');
 }
 
+export function strToVersion(s: string): ?Version {
+  const semverStr = semver.valid(s);
+  if (semverStr == null) {
+    return null;
+  }
+  const [majorStr, minorStr, patchStr] = s.split('.');
+  if (
+    Number.isNaN(majorStr) ||
+    Number.isNaN(minorStr) ||
+    Number.isNaN(patchStr)
+  ) {
+    return null;
+  }
+
+  // don't use parseInt so we catch errors if it's a float
+  const major = parseFloat(majorStr);
+  const minor = parseFloat(minorStr);
+  const patch = parseFloat(patchStr);
+  if (
+    typeof major !== 'number' ||
+    typeof minor !== 'number' ||
+    typeof patch !== 'number'
+  ) {
+    return null;
+  }
+  if (!isVersionNum(major) || !isVersionNum(minor) || !isVersionNum(patch)) {
+    return null;
+  }
+  return {
+    major,
+    minor,
+    patch,
+  };
+}
+
 export function canClientRead(client: Version, file: Version): boolean {
   return semver.satisfies(
     versionStr(file),
@@ -136,4 +183,50 @@ export function canClientWrite(client: Version, file: Version): boolean {
     versionStr(file),
     `<=${versionStr(toWriteVersion(client))}`,
   );
+}
+
+export type File<T> = {
+  version: Version,
+  content: T,
+};
+
+export type DeserializedFile = File<mixed>;
+
+export type Deserialization<T> = {
+  deserializedFile: DeserializedFile,
+  content: T,
+};
+
+export class ReadVersionTooNewError extends Error {
+  readVersion: Version;
+  latestVersionCanBeRead: Version;
+
+  constructor(readVersion: Version, latestVersionCanBeRead: Version) {
+    super(
+      `${versionStr(readVersion)} is too new; can only read up to ${versionStr(
+        latestVersionCanBeRead,
+      )}`,
+    );
+
+    this.readVersion = readVersion;
+    this.latestVersionCanBeRead = latestVersionCanBeRead;
+  }
+}
+
+export class WriteVersionNotNewEnoughError extends Error {
+  writeVersion: Version;
+  latestVersionCanBeWritten: Version;
+
+  constructor(writeVersion: Version, latestVersionCanBeWritten: Version) {
+    super(
+      `${versionStr(
+        writeVersion,
+      )} is too new; can only write up to ${versionStr(
+        latestVersionCanBeWritten,
+      )}`,
+    );
+
+    this.writeVersion = writeVersion;
+    this.latestVersionCanBeWritten = latestVersionCanBeWritten;
+  }
 }
