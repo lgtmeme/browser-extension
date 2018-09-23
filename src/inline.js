@@ -9,6 +9,8 @@ import {
   setFileContents,
 } from './githubFs';
 
+import {serializeMacrosToFile, deserializeMacrosFromFile} from './fileFormat';
+
 // eslint-disable-next-line no-console
 console.log("I'm an inline script");
 
@@ -30,18 +32,31 @@ if (currentRepo) {
     console.log('test repo exists?', exists);
 
     if (exists) {
-      getFileContents(testRepo, 'test.json').then(contents => {
+      getFileContents(testRepo, 'test.json').then(raw => {
         // eslint-disable-next-line no-console
-        console.log('got some contents', contents);
+        console.log('got some contents', raw);
 
-        setFileContents(
-          testRepo,
-          'test.json',
-          old => `${old}\nsomething new ${old.split('\n').length.toString()}`,
-        ).then(() => {
+        const deserialized = deserializeMacrosFromFile(raw);
+        // eslint-disable-next-line no-console
+        console.log('deserialized', deserialized);
+        if (deserialized) {
+          const {deserializedFile, content} = deserialized;
+
+          const macros = content.slice(0);
+          macros.push({
+            name: `justright ${macros.length}`,
+            url: 'google.com',
+          });
+
+          const serialized = serializeMacrosToFile(deserializedFile, macros);
           // eslint-disable-next-line no-console
-          console.log('saved');
-        });
+          console.log('serialized', serialized);
+
+          setFileContents(testRepo, 'test.json', _ => serialized).then(() => {
+            // eslint-disable-next-line no-console
+            console.log('saved');
+          });
+        }
       });
     }
   });
