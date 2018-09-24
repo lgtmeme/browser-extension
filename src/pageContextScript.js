@@ -5,17 +5,22 @@
 // able to mutate them.
 
 import {setupGithubHooks} from './githubHooks';
+import type {Macro} from './fileFormat';
 import {registerListener, sendMessage} from './rpc';
 import addUrlChangeListener from './util/addUrlChangeListener';
 
+let macros: ?Array<Macro> = null;
 function setup() {
-  setupGithubHooks();
-
-  // eslint-disable-next-line no-console
-  registerListener(message => console.log(message));
-
   // This has to be registered from the page context, since we mutate globals
   addUrlChangeListener(() => sendMessage({type: 'urlChanged'}));
+
+  registerListener(message => {
+    if (message.type === 'macrosUpdated') {
+      macros = message.content;
+    }
+  });
+
+  setupGithubHooks(() => macros);
 }
 
 setup();
