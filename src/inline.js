@@ -1,6 +1,8 @@
 // @flow
 // @format
 
+import nullthrows from 'nullthrows';
+
 import {
   getCurrentRepo,
   getMemeRepoFor,
@@ -10,6 +12,10 @@ import {
 } from './githubFs';
 
 import {serializeMacrosToFile, deserializeMacrosFromFile} from './fileFormat';
+
+import type {Chrome} from './chrome';
+
+declare var chrome: Chrome;
 
 // eslint-disable-next-line no-console
 console.log("I'm an inline script");
@@ -61,3 +67,14 @@ if (currentRepo) {
     }
   });
 }
+
+// We need to execute JS within the context of the page. The only way to do so
+// is to embed a <script> tag explicitly.
+// https://stackoverflow.com/questions/9602022/chrome-extension-retrieving-global-variable-from-webpage/9636008#9636008
+const inlineScriptEl = document.createElement('script');
+inlineScriptEl.src = chrome.extension.getURL('inlineScript.bundle.js');
+inlineScriptEl.onload = function onLoad() {
+  this.remove();
+};
+nullthrows(document.head).appendChild(inlineScriptEl);
+nullthrows(document.head).appendChild(inlineScriptEl);
