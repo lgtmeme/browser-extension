@@ -8,7 +8,7 @@ import {
   getMemeRepoFor,
   doesRepoExist,
   getFileContents,
-  setFileContents,
+  // setFileContents,
 } from './githubFs';
 
 import {serializeMacrosToFile, deserializeMacrosFromFile} from './fileFormat';
@@ -58,10 +58,12 @@ if (currentRepo) {
           // eslint-disable-next-line no-console
           console.log('serialized', serialized);
 
+          /*
           setFileContents(testRepo, 'test.json', _ => serialized).then(() => {
             // eslint-disable-next-line no-console
             console.log('saved');
           });
+          */
         }
       });
     }
