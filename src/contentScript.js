@@ -13,6 +13,8 @@ import {
 
 import {serializeMacrosToFile, deserializeMacrosFromFile} from './fileFormat';
 
+import {sendMessage} from './rpc';
+
 import type {Chrome} from './chrome';
 
 declare var chrome: Chrome;
@@ -81,3 +83,10 @@ pageContextScriptEl.onload = function onLoad() {
   this.remove();
 };
 nullthrows(document.head).appendChild(pageContextScriptEl);
+
+setTimeout(() => {
+  sendMessage({
+    type: 'macrosUpdated',
+    content: [{name: 'justright', url: 'derpurl'}],
+  });
+}, 1000);
