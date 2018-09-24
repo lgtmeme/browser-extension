@@ -15,8 +15,8 @@ module.exports = {
   entry: {
     background: ['babel-polyfill', './src/background.js'],
     popup: ['babel-polyfill', './src/popup.js'],
-    inline: ['babel-polyfill', './src/inline.js'],
-    inlineScript: ['babel-polyfill', './src/inlineScript.js'],
+    contentScript: ['babel-polyfill', './src/contentScript.js'],
+    pageContextScript: ['babel-polyfill', './src/pageContextScript.js'],
   },
   module: {
     rules: [

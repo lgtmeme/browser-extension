@@ -12,11 +12,11 @@
     {
       "matches": ["https://*.github.com/*"],
       "run_at": "document_end",
-      "js": ["inline.bundle.js"]
+      "js": ["contentScript.bundle.js"]
     }
   ],
   "web_accessible_resources": [
-    "inlineScript.bundle.js"
+    "pageContextScript.bundle.js"
   ],
   "page_action": {
     "default_popup": "popup.html",
