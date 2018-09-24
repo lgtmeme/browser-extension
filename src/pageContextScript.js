@@ -19,6 +19,3 @@ function setup() {
 }
 
 setup();
-
-// eslint-disable-next-line no-console
-console.log("I'm an pageContext script");

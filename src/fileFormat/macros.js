@@ -10,6 +10,8 @@ import {serializeJSONFile, deserializeJSONFile} from './jsonFile';
 
 const VERSION = version(0, 0, 1);
 
+export const MACROS_FILENAME = 'macros.json';
+
 export type Macro = {
   name: string,
   url: string,

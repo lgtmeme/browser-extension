@@ -28,6 +28,13 @@ export function getMemeRepoFor(currentRepo: Repo): Repo {
   };
 }
 
+export function getMemeRepoForOwner(owner: string): Repo {
+  return {
+    owner,
+    name: MEME_REPO_NAME,
+  };
+}
+
 export async function doesRepoExist(repo: Repo): Promise<boolean> {
   const res = await fetch(getRepoUrl(repo), {
     method: 'HEAD',
