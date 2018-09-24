@@ -13,7 +13,7 @@ import {
 
 import {serializeMacrosToFile, deserializeMacrosFromFile} from './fileFormat';
 
-import {sendMessage} from './rpc';
+import {sendMessage, registerListener} from './rpc';
 
 import type {Chrome} from './chrome';
 
@@ -90,3 +90,6 @@ setTimeout(() => {
     content: [{name: 'justright', url: 'derpurl'}],
   });
 }, 1000);
+
+// eslint-disable-next-line no-console
+registerListener(message => console.log(message, document.location));

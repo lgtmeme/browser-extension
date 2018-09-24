@@ -21,6 +21,9 @@ export type RPCMessage =
   | {
       type: 'macrosUpdated',
       content: RPCMessageMacrosUpdated,
+    }
+  | {
+      type: 'urlChanged',
     };
 
 // TODO this has no security - any script can window.postMessage a message

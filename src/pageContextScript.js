@@ -5,12 +5,20 @@
 // able to mutate them.
 
 import {setupGithubHooks} from './githubHooks';
-import {registerListener} from './rpc';
+import {registerListener, sendMessage} from './rpc';
+import addUrlChangeListener from './util/addUrlChangeListener';
 
-setupGithubHooks();
+function setup() {
+  setupGithubHooks();
 
-// eslint-disable-next-line no-console
-registerListener(message => console.log(message));
+  // eslint-disable-next-line no-console
+  registerListener(message => console.log(message));
+
+  // This has to be registered from the page context, since we mutate globals
+  addUrlChangeListener(() => sendMessage({type: 'urlChanged'}));
+}
+
+setup();
 
 // eslint-disable-next-line no-console
 console.log("I'm an pageContext script");
