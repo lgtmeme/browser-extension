@@ -9,5 +9,5 @@ import replaceMacrosInPreviewHook from './replaceMacrosInPreviewHook';
 
 export function setupGithubHooks(getMacros: () => ?Array<Macro>): void {
   registerHook(replaceMacrosOnSubmitHook(getMacros));
-  registerHook(replaceMacrosInPreviewHook);
+  registerHook(replaceMacrosInPreviewHook(getMacros));
 }

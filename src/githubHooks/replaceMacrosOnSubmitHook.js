@@ -5,10 +5,7 @@ import type {Macro} from '../fileFormat';
 
 import type {GithubHook} from './registerHook';
 import {cloneFormDataWithNewValue} from './util';
-
-function getMacroMarkdown(macro: Macro): string {
-  return `![${macro.name}](${macro.url} "${macro.name}")`;
-}
+import {getMacroMarkdown} from './markdown';
 
 export default function createHook(getMacros: () => ?Array<Macro>): GithubHook {
   const replaceMacrosOnSubmitHook: GithubHook = async function replaceMacrosOnSubmitHook(
@@ -44,7 +41,7 @@ export default function createHook(getMacros: () => ?Array<Macro>): GithubHook {
       }
 
       const macros = getMacros();
-      if (!macros) {
+      if (!macros || macros.length === 0) {
         return null;
       }
 
