@@ -1,6 +1,9 @@
 // @flow
 // @format
 
+import nullthrows from 'nullthrows';
+import invariant from 'invariant';
+
 export function getXPathNodes(
   node: HTMLElement,
   path: string,
@@ -19,4 +22,12 @@ export function getXPathNodes(
   }
 
   return result;
+}
+
+export function htmlToElement(html: string): HTMLElement {
+  const template = document.createElement('template');
+  template.innerHTML = html.trim();
+  const node = nullthrows(template.content.firstChild);
+  invariant(node instanceof HTMLElement, 'Root must be an HTML element');
+  return node;
 }

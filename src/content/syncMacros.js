@@ -1,15 +1,22 @@
 // @flow
 // @format
 
-import type {Macro} from '../fileFormat';
+import invariant from 'invariant';
+
+import type {Macro, MacrosFile} from '../fileFormat';
 import {
   getCurrentRepo,
   getMemeRepoForOwner,
   doesRepoExist,
   getFileContents,
+  setFileContents,
   NotFoundError,
 } from '../githubFs';
-import {MACROS_FILENAME, deserializeMacrosFromFile} from '../fileFormat';
+import {
+  MACROS_FILENAME,
+  deserializeMacrosFromFile,
+  serializeMacrosToFile,
+} from '../fileFormat';
 import {sendMessage, registerListener} from '../rpc';
 
 // Cache so we don't do this like mad on each page load
@@ -17,7 +24,7 @@ import {sendMessage, registerListener} from '../rpc';
 // TODO this doesn't update once we've loaded it. Need to refresh on interval
 // TODO also, we should stick this into local storage and only update on an
 // interval
-const macrosByOwner: {[owner: string]: ?Array<Macro>} = {};
+const macroFilesByOwner: {[owner: string]: ?MacrosFile} = {};
 
 let previousOwner: ?string = null;
 
@@ -29,7 +36,7 @@ function getCurrentOwner(): ?string {
   return repo.owner;
 }
 
-async function getMacrosForOwner(owner: string): Promise<?Array<Macro>> {
+async function getMacrosForOwner(owner: string): Promise<?MacrosFile> {
   const memeRepo = getMemeRepoForOwner(owner);
 
   const exists = await doesRepoExist(memeRepo);
@@ -47,14 +54,60 @@ async function getMacrosForOwner(owner: string): Promise<?Array<Macro>> {
     throw e;
   }
 
-  const deserialized = deserializeMacrosFromFile(rawFile);
-  if (!deserialized) {
+  return deserializeMacrosFromFile(rawFile);
+}
+
+export function getMacrosFile(): ?MacrosFile {
+  const currentOwner = getCurrentOwner();
+  if (!currentOwner) {
+    return null;
+  }
+  const macroFile = macroFilesByOwner[currentOwner];
+  if (!macroFile) {
+    return null;
+  }
+  return macroFile;
+}
+
+// Expose this locally in the content script context as well
+export function getMacros(): ?Array<Macro> {
+  const file = getMacrosFile();
+  if (!file) {
+    return null;
+  }
+  return file.content;
+}
+
+export async function forceSyncMacros(): Promise<?MacrosFile> {
+  const currentOwner = getCurrentOwner();
+  if (!currentOwner) {
     return null;
   }
 
-  const macros = deserialized.content;
+  macroFilesByOwner[currentOwner] = await getMacrosForOwner(currentOwner);
+  return macroFilesByOwner[currentOwner];
+}
 
-  return macros;
+export async function addMacro(newMacro: Macro): Promise<void> {
+  // Sync to the latest before beginning.
+  const existingMacroFile = await forceSyncMacros();
+  invariant(existingMacroFile, 'No target macro file');
+  if (existingMacroFile.content.map(m => m.name).includes(newMacro.name)) {
+    throw new Error(`Macro with ${newMacro.name} already exists`);
+  }
+
+  const macros = existingMacroFile.content.slice(0);
+  macros.push(newMacro);
+  const newFile = serializeMacrosToFile(existingMacroFile, macros);
+
+  const owner = getCurrentOwner();
+  invariant(owner, 'Must have an owner');
+  const memeRepo = getMemeRepoForOwner(owner);
+  await setFileContents(memeRepo, MACROS_FILENAME, () => newFile);
+
+  // Sync again after saving, to reload local cache. Can probably be skipped if
+  // we refactor serializeMacrosToFile to give back a Deserialization<>.
+  await forceSyncMacros();
 }
 
 async function onUrlChange() {
@@ -69,11 +122,11 @@ async function onUrlChange() {
   }
 
   let macros: ?Array<Macro> = null;
-  if (macrosByOwner.hasOwnProperty(currentOwner)) {
-    macros = macrosByOwner[currentOwner];
-  } else {
-    macros = await getMacrosForOwner(currentOwner);
+  if (!macroFilesByOwner.hasOwnProperty(currentOwner)) {
+    macroFilesByOwner[currentOwner] = await getMacrosForOwner(currentOwner);
   }
+  const macroFile = macroFilesByOwner[currentOwner];
+  macros = macroFile ? macroFile.content : [];
 
   sendMessage({type: 'macrosUpdated', content: macros || []});
 }

@@ -3,7 +3,7 @@
 
 import invariant from 'invariant';
 
-import type {File, DeserializedFile, Deserialization} from './versioning';
+import type {File} from './versioning';
 import {version} from './versioning';
 
 import {serializeJSONFile, deserializeJSONFile} from './jsonFile';
@@ -20,7 +20,7 @@ export type Macro = {
 export type MacrosFile = File<Array<Macro>>;
 
 export function serializeMacrosToFile(
-  existingFile: DeserializedFile,
+  existingFile: MacrosFile,
   newMacros: Array<Macro>,
 ): string {
   // TODO for this client to write forward-compatible files, it needs to figure
@@ -57,9 +57,7 @@ function deserializeVersion0(content: mixed): Array<Macro> {
   });
 }
 
-export function deserializeMacrosFromFile(
-  file: string,
-): ?Deserialization<Array<Macro>> {
+export function deserializeMacrosFromFile(file: string): ?MacrosFile {
   const deserializedFile = deserializeJSONFile(VERSION, file);
   if (!deserializedFile) {
     return null;
@@ -75,7 +73,7 @@ export function deserializeMacrosFromFile(
   }
 
   return {
-    deserializedFile,
+    version: ver,
     content: macros,
   };
 }

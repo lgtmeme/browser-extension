@@ -3,7 +3,7 @@
 
 import nullthrows from 'nullthrows';
 
-import {startSyncingMacros} from './content';
+import {startSyncingMacros, insertUIOnPageLoad} from './content';
 
 import type {Chrome} from './chrome';
 
@@ -26,3 +26,5 @@ function setupPageContextScript() {
 setupPageContextScript();
 
 startSyncingMacros();
+
+insertUIOnPageLoad();
