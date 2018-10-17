@@ -78,6 +78,10 @@ export function getMacros(): ?Array<Macro> {
   return file.content;
 }
 
+function notifyPageContext(macros: Array<Macro>) {
+  sendMessage({type: 'macrosUpdated', content: macros});
+}
+
 export async function forceSyncMacros(): Promise<?MacrosFile> {
   const currentOwner = getCurrentOwner();
   if (!currentOwner) {
@@ -85,6 +89,11 @@ export async function forceSyncMacros(): Promise<?MacrosFile> {
   }
 
   macroFilesByOwner[currentOwner] = await getMacrosForOwner(currentOwner);
+
+  const macroFile = macroFilesByOwner[currentOwner];
+  const macros = macroFile ? macroFile.content : [];
+  notifyPageContext(macros || []);
+
   return macroFilesByOwner[currentOwner];
 }
 
@@ -128,7 +137,7 @@ async function onUrlChange() {
   const macroFile = macroFilesByOwner[currentOwner];
   macros = macroFile ? macroFile.content : [];
 
-  sendMessage({type: 'macrosUpdated', content: macros || []});
+  notifyPageContext(macros || []);
 }
 
 export function startSyncingMacros() {
