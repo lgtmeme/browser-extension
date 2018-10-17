@@ -48,7 +48,7 @@ function createUIHTML(): string {
   `;
 }
 
-function updateUIHTML(detailsEl: HTMLElement): void {
+function updateUIHTML(detailsEl: HTMLDetailsElement): void {
   const textarea = getXPathNodes(
     detailsEl,
     'ancestor::*[contains(@class, "js-comment")]//textarea[contains(@class, "js-comment-field")]',
@@ -146,6 +146,7 @@ function updateUIHTML(detailsEl: HTMLElement): void {
           // TODO
           // eslint-disable-next-line no-console
           console.log('added');
+          detailsEl.open = false;
         })
         .catch(e => {
           // TODO

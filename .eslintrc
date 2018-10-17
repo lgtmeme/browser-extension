@@ -12,6 +12,7 @@
       "no-prototype-builtins": 0,
       "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement"],
       "no-unused-vars": ["error", {"argsIgnorePattern": "^_"}],
+      "no-param-reassign": ["error", { "props": false }],
       "import/prefer-default-export": 0
     },
     "env": {
