@@ -1,6 +1,6 @@
 {
-  "name": "LGTMeme for Chrome",
-  "version": "1.0",
+  "name": "LGTMeme",
+  "version": "0.0.1",
   "description": "ItS SheRAmiE !",
   "manifest_version": 2,
   "permissions": ["activeTab", "declarativeContent"],
