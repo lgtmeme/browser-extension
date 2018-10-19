@@ -62,6 +62,7 @@ typings/
 
 # Build
 build/
+build.zip
 
 junit.xml
 reports/
