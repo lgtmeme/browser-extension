@@ -4,21 +4,15 @@
   "description": "ItS SheRAmiE !",
   "manifest_version": 2,
   "permissions": ["activeTab", "declarativeContent"],
+  "optional_permissions": ["http://*/", "https://*/", "tabs"],
   "background": {
-    "scripts": ["background.bundle.js"],
+    "scripts": ["backgroundScript.bundle.js"],
     "persistent": false
   },
-  "content_scripts": [
-    {
-      "matches": ["https://*.github.com/*"],
-      "run_at": "document_end",
-      "js": ["contentScript.bundle.js"]
-    }
-  ],
   "web_accessible_resources": [
     "pageContextScript.bundle.js"
   ],
-  "page_action": {
+  "browser_action": {
     "default_popup": "popup.html",
     "default_title": "Shoop Da Woop!"
   }

@@ -13,9 +13,10 @@ module.exports = {
   mode: 'development',
   devtool: 'source-map', // Chrome CSP doesn't allow `eval()`
   entry: {
-    background: ['babel-polyfill', './src/background.js'],
+    backgroundScript: ['babel-polyfill', './src/backgroundScript.js'],
     popup: ['babel-polyfill', './src/popup.js'],
     contentScript: ['babel-polyfill', './src/contentScript.js'],
+    contentScriptInject: ['./src/contentScriptInject.js'],
     pageContextScript: ['babel-polyfill', './src/pageContextScript.js'],
   },
   module: {

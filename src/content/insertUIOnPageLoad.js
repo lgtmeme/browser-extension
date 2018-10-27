@@ -6,6 +6,7 @@ import invariant from 'invariant';
 
 import {getMacros, addMacro} from './syncMacros';
 import {getXPathNodes, htmlToElement} from '../util/domUtil';
+import {registerListener} from '../rpc';
 
 function matchMarkdownImageURLs(markdown: string): Array<string> {
   const lines = markdown.split('\n');
@@ -184,4 +185,15 @@ export function insertUIOnPageLoad() {
   } else {
     insertUI();
   }
+}
+
+export function insertUIOnEveryPageLoad() {
+  // Current page load
+  insertUIOnPageLoad();
+
+  registerListener(message => {
+    if (message.type === 'urlChanged') {
+      insertUIOnPageLoad();
+    }
+  });
 }
