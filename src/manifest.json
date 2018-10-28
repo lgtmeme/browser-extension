@@ -13,6 +13,10 @@
     "pageContextScript.bundle.js"
   ],
   "browser_action": {
+    "default_icon": {
+      "16": "assets/browser_action_icon.png",
+      "32": "assets/browser_action_icon-2x.png"
+    },
     "default_popup": "popup.html",
     "default_title": "Shoop Da Woop!"
   }

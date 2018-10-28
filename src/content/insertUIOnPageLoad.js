@@ -28,8 +28,11 @@ function createUIHTML(): string {
     <div class="toolbar-group">
       <details class="details-reset details-overlay toolbar-item select-menu select-menu-modal-right js-saved-reply-container js-lgtmeme-container">
         <summary class="menu-target">
-          <svg class="octicon octicon-reply" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true">
-            <path fill-rule="evenodd" d="M6 3.5c3.92.44 8 3.125 8 10-2.312-5.062-4.75-6-8-6V11L.5 5.5 6 0v3.5z"></path>
+          <svg class="octicon octicon-reply" viewBox="0 0 16 15" version="1.1" width="16" height="15" aria-hidden="true">
+            <g transform="translate(-1, -2)">
+                <polygon points="2.03130922 1.5 4.02349672 1.5 7.80865297 8.65527344 11.6519147 1.5 13.5195905 1.5 13.5195905 13.2954102 12.1084577 13.2954102 12.1084577 3.52539062 8.48101626 9.91699219 7.06988344 9.91699219 3.44244204 3.52539062 3.44244204 13.2954102 2.03130922 13.2954102"></polygon>
+                <polygon points="0 16 0 15 16 15 16 16"></polygon>
+            </g>
           </svg>
           <span class="dropdown-caret"></span>
         </summary>

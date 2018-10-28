@@ -53,6 +53,7 @@ module.exports = {
       chunks: ['popup'],
     }),
     new CopyWebpackPlugin([{from: './src/manifest.json'}]),
+    new CopyWebpackPlugin([{from: './assets/*'}]),
   ],
   output: {
     filename: '[name].bundle.js',
