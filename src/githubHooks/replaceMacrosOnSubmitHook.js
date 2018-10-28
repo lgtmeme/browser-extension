@@ -5,7 +5,7 @@ import type {Macro} from '../fileFormat';
 
 import type {GithubHook} from './registerHook';
 import {cloneFormDataWithNewValue} from './util';
-import {getMacroMarkdown} from './markdown';
+import {replaceWithMacros} from './markdown';
 
 export default function createHook(getMacros: () => ?Array<Macro>): GithubHook {
   const replaceMacrosOnSubmitHook: GithubHook = async function replaceMacrosOnSubmitHook(
@@ -51,14 +51,7 @@ export default function createHook(getMacros: () => ?Array<Macro>): GithubHook {
         return null;
       }
 
-      let newValue = value;
-      macros.forEach(macro => {
-        newValue = newValue.replace(
-          new RegExp(`\\b${macro.name}\\b`, 'g'),
-          getMacroMarkdown(macro),
-        );
-      });
-      return newValue;
+      return replaceWithMacros(value, macros);
     });
     newParams.body = newFormData;
     return [url, newParams];

@@ -4,7 +4,7 @@
 import type {Macro} from '../fileFormat';
 import {getXPathNodes} from '../util/domUtil';
 
-import {getMacroMarkdown} from './markdown';
+import {replaceWithMacros} from './markdown';
 import type {GithubFormHandler} from './registerHook';
 
 export default function createHandler(
@@ -35,13 +35,7 @@ export default function createHandler(
       return;
     }
 
-    let newValue = textarea.value;
-    macros.forEach(macro => {
-      newValue = newValue.replace(
-        new RegExp(`\\b${macro.name}\\b`, 'g'),
-        getMacroMarkdown(macro),
-      );
-    });
+    const newValue = replaceWithMacros(textarea.value, macros);
     if (newValue !== textarea.value) {
       textarea.value = newValue;
     }
