@@ -24,9 +24,9 @@ export default function createHook(getMacros: () => ?Array<Macro>): GithubHook {
       return null;
     }
 
-    const ISSUE_COMMENT_URL_REGEX = /https:\/\/github.com\/[^/]+\/[^/]+\/issue_comments$/;
-    const PULL_COMMENT_URL_REGEX = /https:\/\/github.com\/[^/]+\/[^/]+\/pull\/\d+\/comment$/;
-    const PULL_INLINE_COMMENT_URL_REGEX = /https:\/\/github.com\/[^/]+\/[^/]+\/pull\/\d+\/review_comment\/create$/;
+    const ISSUE_COMMENT_URL_REGEX = /https?:\/\/[^/]+\/[^/]+\/[^/]+\/issue_comments$/;
+    const PULL_COMMENT_URL_REGEX = /https?:\/\/[^/]+\/[^/]+\/[^/]+\/pull\/\d+\/comment$/;
+    const PULL_INLINE_COMMENT_URL_REGEX = /https?:\/\/[^/]+\/[^/]+\/[^/]+\/pull\/\d+\/review_comment\/create$/;
     if (
       !url.match(ISSUE_COMMENT_URL_REGEX) &&
       !url.match(PULL_COMMENT_URL_REGEX) &&

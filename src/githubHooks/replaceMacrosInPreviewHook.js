@@ -18,7 +18,7 @@ export default function createHook(getMacros: () => ?Array<Macro>): GithubHook {
     if (!(req instanceof Request)) {
       return null;
     }
-    const URL_REGEX = /https:\/\/github.com\/preview\?markdown_unsupported=false&repository=[\d]+&subject=[\d]+&subject_type=(Issue|PullRequest)/;
+    const URL_REGEX = /https?:\/\/[^/]+\/preview\?markdown_unsupported=false&repository=[\d]+&subject=[\d]+&subject_type=(Issue|PullRequest)/;
     if (!req.url.match(URL_REGEX)) {
       return null;
     }
