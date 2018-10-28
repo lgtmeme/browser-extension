@@ -13,14 +13,18 @@ export default function createHandler(
   const replaceMacrosInReviewFormHandler: GithubFormHandler = function replaceMacrosInReviewFormHandler(
     form: HTMLFormElement,
   ): void {
-    const FORM_ACTION_REGEX = /^https?:\/\/[^/]+\/[^/]+\/[^/]+\/pull\/\d+\/reviews$/;
-    if (!form.action.match(FORM_ACTION_REGEX)) {
+    const PR_REVIEW_FORM_ACTION_REGEX = /^https?:\/\/[^/]+\/[^/]+\/[^/]+\/pull\/\d+\/reviews$/;
+    const CREATE_PR_FORM_ACTION_REGEX = /^https?:\/\/[^/]+\/[^/]+\/[^/]+\/pull\/create\?/;
+    if (
+      !form.action.match(PR_REVIEW_FORM_ACTION_REGEX) &&
+      !form.action.match(CREATE_PR_FORM_ACTION_REGEX)
+    ) {
       return;
     }
 
     const textarea = getXPathNodes(
       form,
-      '//textarea[@name="pull_request_review[body]"]',
+      '//textarea[@name="pull_request_review[body]" or @name="pull_request[body]"]',
     )[0];
     if (!(textarea instanceof HTMLTextAreaElement)) {
       return;
