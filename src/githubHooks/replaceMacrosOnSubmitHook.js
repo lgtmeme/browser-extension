@@ -2,10 +2,10 @@
 // @format
 
 import type {Macro} from '../fileFormat';
+import {replaceWithMacros} from '../util/markdown';
 
 import type {GithubHook} from './registerHook';
 import {cloneFormDataWithNewValue} from './util';
-import {replaceWithMacros} from './markdown';
 
 export default function createHook(getMacros: () => ?Array<Macro>): GithubHook {
   const replaceMacrosOnSubmitHook: GithubHook = async function replaceMacrosOnSubmitHook(

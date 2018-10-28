@@ -3,8 +3,8 @@
 
 import type {Macro} from '../fileFormat';
 import {getXPathNodes} from '../util/domUtil';
+import {replaceWithMacros} from '../util/markdown';
 
-import {replaceWithMacros} from './markdown';
 import type {GithubFormHandler} from './registerHook';
 
 export default function createHandler(
