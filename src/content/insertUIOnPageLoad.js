@@ -7,6 +7,7 @@ import invariant from 'invariant';
 import {getMacros, addMacro} from './syncMacros';
 import {getXPathNodes, htmlToElement} from '../util/domUtil';
 import {registerListener} from '../rpc';
+import {replaceMarkdownWithMacro} from '../util/markdown';
 
 function matchMarkdownImageURLs(markdown: string): Array<string> {
   const lines = markdown.split('\n');
@@ -157,11 +158,20 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
       addMacroInput.disabled = true;
       addMacroButton.disabled = true;
 
-      addMacro({name: macro, url: addMacroImage.src})
+      const macroObj = {
+        name: macro,
+        url: addMacroImage.src,
+      };
+      addMacro(macroObj)
         .then(() => {
           // eslint-disable-next-line no-console
-          console.log(`Added macro: ${macro}`);
+          console.log(`Added macro: ${macroObj.name}`);
           detailsEl.open = false;
+          const newTextareaValue = replaceMarkdownWithMacro(
+            textarea.value,
+            macroObj,
+          );
+          textarea.value = newTextareaValue;
         })
         .catch(e => {
           // TODO
