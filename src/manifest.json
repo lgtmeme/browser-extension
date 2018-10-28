@@ -1,6 +1,6 @@
 {
   "name": "LGTMeme",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Use memes in GitHub pull requests!",
   "manifest_version": 2,
   "permissions": ["activeTab", "declarativeContent"],
