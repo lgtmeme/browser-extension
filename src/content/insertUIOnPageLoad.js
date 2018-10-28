@@ -136,7 +136,6 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
     addMacroButton.addEventListener('click', () => {
       const macro = addMacroInput.value;
       if (!macro) {
-        // TODO
         // eslint-disable-next-line no-alert
         alert('Must enter a macro');
         return;
@@ -144,28 +143,32 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
 
       const existingMacros = getMacros();
       if (!existingMacros) {
-        // TODO
         // eslint-disable-next-line no-alert
         alert("Some bullshit error happened and we couldn't sync macros");
         return;
       }
 
       if (existingMacros.map(m => m.name).includes(macro)) {
-        // TODO
         // eslint-disable-next-line no-alert
         alert(`Macro '${macro}' already points to another meme`);
         return;
       }
 
+      addMacroInput.disabled = true;
+      addMacroButton.disabled = true;
+
       addMacro({name: macro, url: addMacroImage.src})
         .then(() => {
-          // TODO
           // eslint-disable-next-line no-console
-          console.log('added');
+          console.log(`Added macro: ${macro}`);
           detailsEl.open = false;
         })
         .catch(e => {
           // TODO
+          // eslint-disable-next-line no-alert
+          alert(
+            'Could not save macro for some reason. sadpanda. See console for error.',
+          );
           // eslint-disable-next-line no-console
           console.error('Error saving macro', e);
         });
