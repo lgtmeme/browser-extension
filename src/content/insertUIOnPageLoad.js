@@ -61,6 +61,7 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
     return;
   }
   const images = matchMarkdownImageURLs(textarea.value);
+  const formID = textarea.id;
 
   let content;
   if (images.length === 0) {
@@ -73,14 +74,25 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
   } else {
     content = images
       .map(
-        image => `
-          <div style="display: table">
-            <img src="${image}" class="lgtmeme-add-macro-image" style="max-width: 100px; max-height: 100px; margin-right: 10px"/>
-            <div style="display: table-cell; vertical-align: middle">
-              Create meme:
-              <br />
-              <input placeholder="Choose a macro" class="lgtmeme-add-macro-input" />
-              <button type="button" class="lgtmeme-add-macro-button">Add</button>
+        (image, imageIdx) => `
+          <div>
+            <div style="text-align: center; margin-bottom: 10px">
+              <img src="${image}" class="lgtmeme-add-macro-image" style="max-width: 100%; max-height: 120px"/>
+            </div>
+            <div>
+              <label
+                for="${`${formID}-macroImage-${imageIdx}`}"
+                style="display: block">
+                Create Meme
+              </label>
+              <input
+                placeholder="Choose a macro"
+                class="lgtmeme-add-macro-input form-control input-sm"
+                type="text"
+                id="${`${formID}-macroImage-${imageIdx}`}"
+                style="width: 228px"
+              />
+              <button type="button" class="lgtmeme-add-macro-button btn btn-sm btn-primary">Add</button>
             </div>
           </div>
         `,
