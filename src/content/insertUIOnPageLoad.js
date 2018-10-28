@@ -55,7 +55,7 @@ function createUIHTML(): string {
 function updateUIHTML(detailsEl: HTMLDetailsElement): void {
   const textarea = getXPathNodes(
     detailsEl,
-    'ancestor::*[contains(@class, "js-comment")]//textarea[contains(@class, "js-comment-field")]',
+    'ancestor::form[contains(@class, "js-new-comment-form") or contains(@class, "js-inline-comment-form")]//textarea[contains(@class, "js-comment-field")]',
   )[0];
   if (!(textarea instanceof HTMLTextAreaElement)) {
     return;
