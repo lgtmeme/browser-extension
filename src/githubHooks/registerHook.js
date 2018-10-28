@@ -22,9 +22,28 @@ async function customFetch(...args: Array<mixed>) {
   return windowFetch.apply(this, newArgs);
 }
 
-export default function registerHook(hook: GithubHook): void {
+export function registerHookInFetch(hook: GithubHook): void {
   if (window.fetch !== customFetch) {
     window.fetch = customFetch;
   }
   registeredHooks.push(hook);
+}
+
+export type GithubFormHandler = (form: HTMLFormElement) => void;
+
+const registeredHandlers: Array<GithubFormHandler> = [];
+let formHandlerEventListenerAdded = false;
+
+export function registerHandlerInFormSubmit(handler: GithubFormHandler): void {
+  if (!formHandlerEventListenerAdded) {
+    formHandlerEventListenerAdded = true;
+
+    window.addEventListener('submit', e => {
+      if (e.target instanceof HTMLFormElement) {
+        registeredHandlers.forEach(h => h(e.target));
+      }
+    });
+  }
+
+  registeredHandlers.push(handler);
 }

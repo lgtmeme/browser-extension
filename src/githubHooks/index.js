@@ -3,11 +3,14 @@
 
 import type {Macro} from '../fileFormat';
 
-import registerHook from './registerHook';
+import {registerHookInFetch, registerHandlerInFormSubmit} from './registerHook';
 import replaceMacrosOnSubmitHook from './replaceMacrosOnSubmitHook';
 import replaceMacrosInPreviewHook from './replaceMacrosInPreviewHook';
+import replaceMacrosInReviewFormHandler from './replaceMacrosInReviewFormHandler';
 
 export function setupGithubHooks(getMacros: () => ?Array<Macro>): void {
-  registerHook(replaceMacrosOnSubmitHook(getMacros));
-  registerHook(replaceMacrosInPreviewHook(getMacros));
+  registerHookInFetch(replaceMacrosOnSubmitHook(getMacros));
+  registerHookInFetch(replaceMacrosInPreviewHook(getMacros));
+
+  registerHandlerInFormSubmit(replaceMacrosInReviewFormHandler(getMacros));
 }
