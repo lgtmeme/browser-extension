@@ -55,12 +55,14 @@ export async function setFileContents(
   );
   const commitHash = nullthrows(commitHashEls[0].getAttribute('value'));
 
-  // TODO this may be different for accounts with only 1 email
   const authorEmailEls = getXPathNodes(
     editPageContainer,
     "//select[@name='author_email']/option[@selected]",
   );
-  const authorEmail = nullthrows(authorEmailEls[0].getAttribute('value'));
+  let authorEmail = null;
+  if (authorEmailEls.length > 0) {
+    authorEmail = nullthrows(authorEmailEls[0].getAttribute('value'));
+  }
 
   const saveAuthTokenEls = getXPathNodes(
     editPageContainer,
@@ -82,7 +84,9 @@ export async function setFileContents(
   saveParams.set('message', '');
   saveParams.set('placeholder_message', `Update ${filepath}`);
   saveParams.set('description', '');
-  saveParams.set('author_email', authorEmail);
+  if (authorEmail) {
+    saveParams.set('author_email', authorEmail);
+  }
   saveParams.set('commit-choice', 'direct');
   saveParams.set('target_branch', 'master');
   saveParams.set('quick_pull', '');
