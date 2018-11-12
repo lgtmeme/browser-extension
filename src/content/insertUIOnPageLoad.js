@@ -43,9 +43,16 @@ function createUIHTML(): string {
 }
 
 function updateUIHTML(detailsEl: HTMLDetailsElement): void {
+  const FORM_CLASSES = [
+    'js-new-comment-form',
+    'js-inline-comment-form',
+    'new-pr-form',
+  ];
   const textarea = getXPathNodes(
     detailsEl,
-    'ancestor::form[contains(@class, "js-new-comment-form") or contains(@class, "js-inline-comment-form")]//textarea[contains(@class, "js-comment-field")]',
+    `ancestor::form[${FORM_CLASSES.map(c => `contains(@class, "${c}")`).join(
+      ' or ',
+    )}]//textarea[contains(@class, "js-comment-field")]`,
   )[0];
   if (!(textarea instanceof HTMLTextAreaElement)) {
     return;
