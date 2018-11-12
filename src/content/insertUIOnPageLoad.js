@@ -179,7 +179,11 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
           console.error('Error saving macro', e);
         });
     };
-    addMacroButton.addEventListener('click', onAddMacro);
+    addMacroButton.addEventListener('click', (e: MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      onAddMacro();
+    });
     detailsEl.addEventListener('submit', e => {
       e.stopPropagation();
       e.preventDefault();
