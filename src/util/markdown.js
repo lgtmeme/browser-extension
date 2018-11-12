@@ -7,6 +7,20 @@ export function getMacroMarkdown(macro: Macro): string {
   return `![${macro.name}](${macro.url} "${macro.name}")`;
 }
 
+export function matchMarkdownImageURLs(markdown: string): Array<string> {
+  const lines = markdown.split('\n');
+
+  return lines
+    .map(line => {
+      const match = line.trim().match(/^!\[[^\]]*\]\(([^ ]+)\)$/);
+      if (!match) {
+        return null;
+      }
+      return match[1];
+    })
+    .filter(Boolean);
+}
+
 export function replaceWithMacros(text: string, macros: Array<Macro>): string {
   const lines = text.split('\n');
   const replacedLines = lines.map(line => {

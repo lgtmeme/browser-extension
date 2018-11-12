@@ -7,21 +7,10 @@ import invariant from 'invariant';
 import {getMacros, addMacro} from './syncMacros';
 import {getXPathNodes, htmlToElement} from '../util/domUtil';
 import {registerListener} from '../rpc';
-import {replaceMarkdownWithMacro} from '../util/markdown';
-
-function matchMarkdownImageURLs(markdown: string): Array<string> {
-  const lines = markdown.split('\n');
-
-  return lines
-    .map(line => {
-      const match = line.match(/^!\[[^\]]+\]\(([^ ]+)\)$/);
-      if (!match) {
-        return null;
-      }
-      return match[1];
-    })
-    .filter(Boolean);
-}
+import {
+  matchMarkdownImageURLs,
+  replaceMarkdownWithMacro,
+} from '../util/markdown';
 
 function createUIHTML(): string {
   // Having "js-saved-reply-container" in the class gets us automatic macro text insertion
