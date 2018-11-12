@@ -80,7 +80,7 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
             <div style="text-align: center; margin-bottom: 10px">
               <img src="${image}" class="lgtmeme-add-macro-image" style="max-width: 100%; max-height: 120px"/>
             </div>
-            <div>
+            <form>
               <label
                 for="${`${formID}-macroImage-${imageIdx}`}"
                 style="display: block">
@@ -93,8 +93,8 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
                 id="${`${formID}-macroImage-${imageIdx}`}"
                 style="width: 228px"
               />
-              <button type="button" class="lgtmeme-add-macro-button btn btn-sm btn-primary">Add</button>
-            </div>
+              <button type="submit" class="lgtmeme-add-macro-button btn btn-sm btn-primary">Add</button>
+            </form>
           </div>
         `,
       )
@@ -134,7 +134,7 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
       addMacroImage instanceof HTMLImageElement,
       'Must be HTMLImageElement',
     );
-    addMacroButton.addEventListener('click', () => {
+    const onAddMacro = () => {
       const macro = addMacroInput.value;
       if (!macro) {
         // eslint-disable-next-line no-alert
@@ -182,6 +182,12 @@ function updateUIHTML(detailsEl: HTMLDetailsElement): void {
           // eslint-disable-next-line no-console
           console.error('Error saving macro', e);
         });
+    };
+    addMacroButton.addEventListener('click', onAddMacro);
+    detailsEl.addEventListener('submit', e => {
+      e.stopPropagation();
+      e.preventDefault();
+      onAddMacro();
     });
   }
 }
